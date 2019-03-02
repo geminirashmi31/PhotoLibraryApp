@@ -10,10 +10,17 @@ namespace PhotoLibraryApp
     public class PhotoLibraryManager
     {
         private const string LIBRARY_MANAGER_FILE_NAME = "PhotoLibraryManager.txt";
-        
-        private readonly Dictionary<string, PhotoLibrary> libraryCollection;
+        private Dictionary<string, PhotoLibrary> libraryCollection;
 
         public PhotoLibraryManager()
+        {
+            this.libraryCollection = new Dictionary<string, PhotoLibrary>();
+            this.PhotoLibraryManagerFile = FileHelper.GetFilePath(LIBRARY_MANAGER_FILE_NAME).Result.Path;
+        }
+
+        public string PhotoLibraryManagerFile { get; private set; }
+
+        public void Initialize()
         {
             this.libraryCollection = LoadPhotoLibraries().Result;
         }
@@ -54,9 +61,9 @@ namespace PhotoLibraryApp
 
         private async static Task<List<string>> LoadPhotoLibraryNames()
         {
-            string managerFile = await FileHelper.ReadTextFileAsync(LIBRARY_MANAGER_FILE_NAME);
+            string managerFileContent = await FileHelper.ReadTextFileAsync(LIBRARY_MANAGER_FILE_NAME);
 
-            List<string> libraries = JsonConvert.DeserializeObject<List<string>>(managerFile);
+            List<string> libraries = JsonConvert.DeserializeObject<List<string>>(managerFileContent);
 
             return libraries != null ? libraries : new List<string>();  
         }

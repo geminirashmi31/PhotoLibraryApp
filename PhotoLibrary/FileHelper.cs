@@ -18,9 +18,7 @@ namespace PhotoLibraryApp
         /// <param name="content">Content to write to the file</param>
         public static async void WriteTextFileAsync(string filename, string content)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var textFile = await localFolder.CreateFileAsync
-                (filename, CreationCollisionOption.OpenIfExists);
+            var textFile = await GetFilePath(filename);
 
             var textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite);
             var textWriter = new DataWriter(textStream);
@@ -38,6 +36,15 @@ namespace PhotoLibraryApp
             var textLength = textStream.Size;
             await textReader.LoadAsync((uint)textLength);
             return textReader.ReadString((uint)textLength);
+        }
+
+        public static async Task<StorageFile> GetFilePath(string fileName)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var textFile = await localFolder.CreateFileAsync
+                (fileName, CreationCollisionOption.OpenIfExists);
+
+            return textFile;
         }
     }
 }
