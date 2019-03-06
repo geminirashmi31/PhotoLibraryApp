@@ -25,20 +25,29 @@ namespace PhotoLibraryApp
             this.libraryCollection = LoadPhotoLibraries().Result;
         }
 
-        public void AddPhotoLibrary(PhotoLibrary photoLibrary)
+        public async Task AddPhotoLibraryAsync(PhotoLibrary photoLibrary)
         {
             this.libraryCollection.Add(photoLibrary.Name, photoLibrary);
-            string jsonPhotoLibrary = JsonConvert.SerializeObject(this.libraryCollection.Keys.ToList());
-            FileHelper.WriteTextFileAsync(LIBRARY_MANAGER_FILE_NAME, jsonPhotoLibrary);
+            await UpdateFileAsync();
         }
 
-        public void RemovePhotoLibrary(string libraryName)
+        public async Task RemovePhotoLibraryAsync(string libraryName)
         {
             this.libraryCollection.Remove(libraryName);
-            string jsonPhotoLibrary = JsonConvert.SerializeObject(this.libraryCollection.Keys.ToList());
-            FileHelper.WriteTextFileAsync(LIBRARY_MANAGER_FILE_NAME, jsonPhotoLibrary);
+            await UpdateFileAsync();
         }
 
+        public async Task ClearAsync()
+        {
+            this.libraryCollection.Clear();
+            await UpdateFileAsync();
+        }
+
+        private async Task UpdateFileAsync()
+        {
+            string jsonPhotoLibrary = JsonConvert.SerializeObject(this.libraryCollection.Keys.ToList());
+            await FileHelper.WriteTextFileAsync(LIBRARY_MANAGER_FILE_NAME, jsonPhotoLibrary);
+        }
 
         private async static Task<Dictionary<string, PhotoLibrary>> LoadPhotoLibraries()
         {
@@ -54,9 +63,7 @@ namespace PhotoLibraryApp
                     libraries.Add(lib, library);
                 }
             }
-
-            return libraries;
-            
+            return libraries;            
         }
 
         private async static Task<List<string>> LoadPhotoLibraryNames()

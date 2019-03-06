@@ -22,7 +22,7 @@ namespace PhotoLibraryApp
             Name = name;
         }
 
-        public void AddPhotoPath(string photoPath)
+        public async void AddPhotoPath(string photoPath)
         {
             Photo photoToAdd = new Photo
             {
@@ -31,10 +31,10 @@ namespace PhotoLibraryApp
             };
             photoLibrary.Add(photoPath, photoToAdd);
             string jsonPhotoLibrary = JsonConvert.SerializeObject(this);
-            FileHelper.WriteTextFileAsync(TEXT_FILE_NAME + Name + ".txt", jsonPhotoLibrary);
+            await FileHelper.WriteTextFileAsync(TEXT_FILE_NAME + Name + ".txt", jsonPhotoLibrary);
         } 
 
-        public void RemovePhotoPath(string photoPath)
+        public async void RemovePhotoPath(string photoPath)
         {
             Photo photoToRemove = new Photo
             {
@@ -43,7 +43,7 @@ namespace PhotoLibraryApp
             };
             photoLibrary.Remove(photoPath);
             string jsonPhotoLibrary = JsonConvert.SerializeObject(this);
-            FileHelper.WriteTextFileAsync(TEXT_FILE_NAME + Name + ".txt", jsonPhotoLibrary);
+            await FileHelper.WriteTextFileAsync(TEXT_FILE_NAME + Name + ".txt", jsonPhotoLibrary);
         }
 
         

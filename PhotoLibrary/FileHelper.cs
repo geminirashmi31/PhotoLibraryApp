@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,26 +17,29 @@ namespace PhotoLibraryApp
         /// </summary>
         /// <param name="filename">Name of the file</param>
         /// <param name="content">Content to write to the file</param>
-        public static async void WriteTextFileAsync(string filename, string content)
+        public static async Task WriteTextFileAsync(string filename, string content)
         {
             var textFile = await GetFilePath(filename);
 
+            await FileIO.WriteTextAsync(textFile, content);           
+            /*
             var textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite);
             var textWriter = new DataWriter(textStream);
             textWriter.WriteString(content);
             await textWriter.StoreAsync();
             textStream.Dispose();
+           */
         }
 
         public static async Task<string> ReadTextFileAsync(string filename)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var textFile = await localFolder.GetFileAsync(filename);
+            var textFile = await GetFilePath(filename);
             var textStream = await textFile.OpenReadAsync();
             var textReader = new DataReader(textStream);
             var textLength = textStream.Size;
             await textReader.LoadAsync((uint)textLength);
-            return textReader.ReadString((uint)textLength);
+
+            return textReader.ReadString((uint)textLength);  
         }
 
         public static async Task<StorageFile> GetFilePath(string fileName)
@@ -43,7 +47,7 @@ namespace PhotoLibraryApp
             var localFolder = ApplicationData.Current.LocalFolder;
             var textFile = await localFolder.CreateFileAsync
                 (fileName, CreationCollisionOption.OpenIfExists);
-
+        
             return textFile;
         }
     }

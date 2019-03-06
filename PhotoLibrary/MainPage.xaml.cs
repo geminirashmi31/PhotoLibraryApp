@@ -30,12 +30,18 @@ namespace PhotoLibrary
             // this.manager = new LibraryManager();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
             // this.manager.AddLibrary();
+            //this.Frame.Navigate(typeof(PhotoLibraryApp.AddPhotoLibrary));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
 
         }
